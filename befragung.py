@@ -3,8 +3,8 @@ import sys
 import psycopg2
 from datetime import datetime
 
-from PyQt5.QtWidgets import *
-
+from PyQt5.QtWidgets import *  # QApplication, QWidget
+from PyQt5.QtGui import *
 from ui_form import Ui_Widget
 
 
@@ -23,17 +23,27 @@ class CheckBoxDict(dict):
         self[position] = ckb
 
     def check(self, position):
-        if 0 <= position < len(self):
+        if 1 <= position <= len(self):
             self[position].setChecked(True)
-            [self[c].setChecked(False) for c, _ in enumerate(self) if c != position]
+            for i in range(len(self)):
+                if i + 1 != position:
+                    self[i + 1].setChecked(False)
+
+    def toggle(self, position):
+        if 1 <= position <= len(self):
+            self[position].setChecked(
+                False) if self[position].checked else self[position].setChecked(True)
 
     def bind(self, position):
         self[position].clicked.connect(lambda: self.check(position))
 
+    def bindToToggle(self, position):
+        self[position].clicked.connect(lambda: self.bindToToggle(position))
+
     def note(self):
-        for c, _ in enumerate(self):
-            if self[c].isChecked():
-                return [1, 2, 3, 4, 5][c]
+        for i in range(len(self)):
+            if self[i + 1].isChecked():
+                return [1, 2, 3, 4, 5][i]
         return 9
 
 
@@ -94,7 +104,7 @@ class Database:
 
     def protocol(self, text: str):
         log = open(self.dbname + '.log', 'a')
-        log.write('-- ' + str(datetime.now()) + '\n')
+        log.write('-- ' + str(datetime.datetime.now()) + '\n')
         log.write(text + '\n')
         log.flush()
         log.close()
@@ -103,6 +113,8 @@ class Database:
 def clear():
     for it in widget.findChildren(QCheckBox):
         it.setChecked(False)
+    for it in widget.findChildren(QLineEdit):
+        it.setText('')
     widget.ui.lineEdit_jahr.setText('2022')
     widget.ui.lineEdit_monat.setText('')
     widget.ui.lineEdit_monat.setCursorPosition(0)
@@ -113,17 +125,16 @@ def save():
     jahr = widget.ui.lineEdit_jahr.text()
     monat = str(int(widget.ui.lineEdit_monat.text())
                 ) if widget.ui.lineEdit_monat.text() != '' else ''
-    if cbdict_geschlecht[0].isChecked():
+    if cbdict_geschlecht[1].isChecked():
         geschlecht = 'männlich'
-    elif cbdict_geschlecht[1].isChecked():
+    elif cbdict_geschlecht[2].isChecked():
         geschlecht = 'weiblich'
     else:
         geschlecht = 'keine Angaben'
-    try:
-        lokal = [['Knie', 'Hüfte', 'Schulter', 'keine Angaben'][c] for c, _ in enumerate(cbdict_lokal) if
-                 cbdict_lokal[c].isChecked() == True][0]
-    except IndexError:
-        lokal = ''
+    lokal = ''
+    for i in range(len(cbdict_lokal)):
+        if cbdict_lokal[i + 1].isChecked():
+            lokal = ['Knie', 'Hüfte', 'Schulter', 'keine Angaben'][i]
     empfarzt = widget.ui.checkBox_empfarzt.isChecked()
     empfangeh = widget.ui.checkBox_empfangeh.isChecked()
     eigen = widget.ui.checkBox_eigen.isChecked()
@@ -134,17 +145,14 @@ def save():
     notephysio = cbdict_physio.note()
     notesozial = cbdict_sozial.note()
     notegesamt = cbdict_gesamt.note()
-    try:
-        anspruch = \
-            [['ja', 'vielleicht', 'nein'][c] for c, _ in enumerate(cbdict_anspruch) if cbdict_anspruch[c].isChecked()][
-                0]
-    except IndexError:
-        anspruch = ''
-    try:
-        empfehlen = \
-            [['ja', 'vielleicht', 'nein'][c] for c, _ in enumerate(cbdict_empfehl) if cbdict_empfehl[c].isChecked()][0]
-    except IndexError:
-        empfehlen = ''
+    anspruch = ''
+    for i in range(len(cbdict_anspruch)):
+        if cbdict_anspruch[i + 1].isChecked():
+            anspruch = ['ja', 'vielleicht', 'nein'][i]
+    empfehlen = ''
+    for i in range(len(cbdict_empfehl)):
+        if cbdict_empfehl[i + 1].isChecked():
+            empfehlen = ['ja', 'vielleicht', 'nein'][i]
     sql = "insert into befragung (jahr, monat, geschlecht, lokal, empfarzt, empfangeh, eigen, wohnort, andere, notearzt, notepflege, notephysio, notesozial, notegesamt, anspruch, empfehlen) values ("
     sql += "'" + jahr + "',"
     sql += "'" + monat + "',"
@@ -167,6 +175,7 @@ def save():
     patbef.close_db()
     clear()
     start()
+
 
 def changeMonat():
     if widget.ui.lineEdit_monat.text() not in [str(x + 1) for x in range(12)]:
@@ -197,61 +206,63 @@ if __name__ == "__main__":
     cbdict_gesamt = CheckBoxDict()
     cbdict_anspruch = CheckBoxDict()
     cbdict_empfehl = CheckBoxDict()
-    cbdict_geschlecht.append(0, widget.ui.checkBox_m)
-    cbdict_geschlecht.append(1, widget.ui.checkBox_w)
+    cbdict_geschlecht.append(1, widget.ui.checkBox_m)
+    cbdict_geschlecht.append(2, widget.ui.checkBox_w)
     for i in range(2):
-        cbdict_geschlecht.bind(i)
-    cbdict_lokal.append(0, widget.ui.checkBox_knie)
-    cbdict_lokal.append(1, widget.ui.checkBox_huefte)
-    cbdict_lokal.append(2, widget.ui.checkBox_schulter)
-    cbdict_lokal.append(3, widget.ui.checkBox_keine)
+        cbdict_geschlecht.bind(i + 1)
+    cbdict_lokal.append(1, widget.ui.checkBox_knie)
+    cbdict_lokal.append(2, widget.ui.checkBox_huefte)
+    cbdict_lokal.append(3, widget.ui.checkBox_schulter)
+    cbdict_lokal.append(4, widget.ui.checkBox_keine)
     for i in range(4):
-        cbdict_lokal.bind(i)
-    cbdict_wahl.append(0, widget.ui.checkBox_empfarzt)
-    cbdict_wahl.append(1, widget.ui.checkBox_empfangeh)
-    cbdict_wahl.append(2, widget.ui.checkBox_eigen)
-    cbdict_wahl.append(3, widget.ui.checkBox_wohnort)
-    cbdict_wahl.append(4, widget.ui.checkBox_andere)
-    cbdict_arzt.append(0, widget.ui.checkBox_11)
-    cbdict_arzt.append(1, widget.ui.checkBox_12)
-    cbdict_arzt.append(2, widget.ui.checkBox_13)
-    cbdict_arzt.append(3, widget.ui.checkBox_14)
-    cbdict_arzt.append(4, widget.ui.checkBox_15)
-    cbdict_pflege.append(0, widget.ui.checkBox_21)
-    cbdict_pflege.append(1, widget.ui.checkBox_22)
-    cbdict_pflege.append(2, widget.ui.checkBox_23)
-    cbdict_pflege.append(3, widget.ui.checkBox_24)
-    cbdict_pflege.append(4, widget.ui.checkBox_25)
-    cbdict_physio.append(0, widget.ui.checkBox_31)
-    cbdict_physio.append(1, widget.ui.checkBox_32)
-    cbdict_physio.append(2, widget.ui.checkBox_33)
-    cbdict_physio.append(3, widget.ui.checkBox_34)
-    cbdict_physio.append(4, widget.ui.checkBox_35)
-    cbdict_sozial.append(0, widget.ui.checkBox_41)
-    cbdict_sozial.append(1, widget.ui.checkBox_42)
-    cbdict_sozial.append(2, widget.ui.checkBox_43)
-    cbdict_sozial.append(3, widget.ui.checkBox_44)
-    cbdict_sozial.append(4, widget.ui.checkBox_45)
-    cbdict_gesamt.append(0, widget.ui.checkBox_51)
-    cbdict_gesamt.append(1, widget.ui.checkBox_52)
-    cbdict_gesamt.append(2, widget.ui.checkBox_53)
-    cbdict_gesamt.append(3, widget.ui.checkBox_54)
-    cbdict_gesamt.append(4, widget.ui.checkBox_55)
+        cbdict_lokal.bind(i + 1)
+    cbdict_wahl.append(1, widget.ui.checkBox_empfarzt)
+    cbdict_wahl.append(2, widget.ui.checkBox_empfangeh)
+    cbdict_wahl.append(3, widget.ui.checkBox_eigen)
+    cbdict_wahl.append(4, widget.ui.checkBox_wohnort)
+    cbdict_wahl.append(5, widget.ui.checkBox_andere)
     for i in range(5):
-        cbdict_arzt.bind(i)
-        cbdict_pflege.bind(i)
-        cbdict_physio.bind(i)
-        cbdict_sozial.bind(i)
-        cbdict_gesamt.bind(i)
-    cbdict_anspruch.append(0, widget.ui.checkBox_ansprja)
-    cbdict_anspruch.append(1, widget.ui.checkBox_ansprvll)
-    cbdict_anspruch.append(2, widget.ui.checkBox_ansprnicht)
-    cbdict_empfehl.append(0, widget.ui.checkBox_weiterja)
-    cbdict_empfehl.append(1, widget.ui.checkBox_weitervllt)
-    cbdict_empfehl.append(2, widget.ui.checkBox_weiternein)
+        cbdict_wahl.bindToToggle(i + 1)
+    cbdict_arzt.append(1, widget.ui.checkBox_11)
+    cbdict_arzt.append(2, widget.ui.checkBox_12)
+    cbdict_arzt.append(3, widget.ui.checkBox_13)
+    cbdict_arzt.append(4, widget.ui.checkBox_14)
+    cbdict_arzt.append(5, widget.ui.checkBox_15)
+    cbdict_pflege.append(1, widget.ui.checkBox_21)
+    cbdict_pflege.append(2, widget.ui.checkBox_22)
+    cbdict_pflege.append(3, widget.ui.checkBox_23)
+    cbdict_pflege.append(4, widget.ui.checkBox_24)
+    cbdict_pflege.append(5, widget.ui.checkBox_25)
+    cbdict_physio.append(1, widget.ui.checkBox_31)
+    cbdict_physio.append(2, widget.ui.checkBox_32)
+    cbdict_physio.append(3, widget.ui.checkBox_33)
+    cbdict_physio.append(4, widget.ui.checkBox_34)
+    cbdict_physio.append(5, widget.ui.checkBox_35)
+    cbdict_sozial.append(1, widget.ui.checkBox_41)
+    cbdict_sozial.append(2, widget.ui.checkBox_42)
+    cbdict_sozial.append(3, widget.ui.checkBox_43)
+    cbdict_sozial.append(4, widget.ui.checkBox_44)
+    cbdict_sozial.append(5, widget.ui.checkBox_45)
+    cbdict_gesamt.append(1, widget.ui.checkBox_51)
+    cbdict_gesamt.append(2, widget.ui.checkBox_52)
+    cbdict_gesamt.append(3, widget.ui.checkBox_53)
+    cbdict_gesamt.append(4, widget.ui.checkBox_54)
+    cbdict_gesamt.append(5, widget.ui.checkBox_55)
+    for i in range(5):
+        cbdict_arzt.bind(i + 1)
+        cbdict_pflege.bind(i + 1)
+        cbdict_physio.bind(i + 1)
+        cbdict_sozial.bind(i + 1)
+        cbdict_gesamt.bind(i + 1)
+    cbdict_anspruch.append(1, widget.ui.checkBox_ansprja)
+    cbdict_anspruch.append(2, widget.ui.checkBox_ansprvll)
+    cbdict_anspruch.append(3, widget.ui.checkBox_ansprnicht)
+    cbdict_empfehl.append(1, widget.ui.checkBox_weiterja)
+    cbdict_empfehl.append(2, widget.ui.checkBox_weitervllt)
+    cbdict_empfehl.append(3, widget.ui.checkBox_weiternein)
     for i in range(3):
-        cbdict_anspruch.bind(i)
-        cbdict_empfehl.bind(i)
+        cbdict_anspruch.bind(i + 1)
+        cbdict_empfehl.bind(i + 1)
     clear()
     widget.ui.pushButton_clear.clicked.connect(clear)
     widget.ui.pushButton_save.clicked.connect(save)

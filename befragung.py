@@ -1,5 +1,4 @@
 # Steffen Troeger 2023
-
 import sys
 import psycopg2
 from datetime import datetime

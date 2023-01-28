@@ -29,16 +29,16 @@ class CheckBoxDict(dict):
                 if i + 1 != position:
                     self[i + 1].setChecked(False)
 
-    def toggle(self, position):
-        if 1 <= position <= len(self):
-            self[position].setChecked(
-                False) if self[position].checked else self[position].setChecked(True)
+    # def toggle(self, position):
+    #     if 1 <= position <= len(self):
+    #         self[position].setChecked(
+    #             False) if self[position].isChecked() else self[position].setChecked(True)
 
     def bind(self, position):
         self[position].clicked.connect(lambda: self.check(position))
 
-    def bindToToggle(self, position):
-        self[position].clicked.connect(lambda: self.bindToToggle(position))
+    # def bindToToggle(self, position):
+    #     self[position].clicked.connect(lambda: self.toggle(position))
 
     def note(self):
         for i in range(len(self)):
@@ -221,8 +221,8 @@ if __name__ == "__main__":
     cbdict_wahl.append(3, widget.ui.checkBox_eigen)
     cbdict_wahl.append(4, widget.ui.checkBox_wohnort)
     cbdict_wahl.append(5, widget.ui.checkBox_andere)
-    for i in range(5):
-        cbdict_wahl.bindToToggle(i + 1)
+    # for i in range(5):
+    #     cbdict_wahl.bindToToggle(i + 1)
     cbdict_arzt.append(1, widget.ui.checkBox_11)
     cbdict_arzt.append(2, widget.ui.checkBox_12)
     cbdict_arzt.append(3, widget.ui.checkBox_13)

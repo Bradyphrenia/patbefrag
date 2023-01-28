@@ -2,11 +2,8 @@
 import sys
 import psycopg2
 from datetime import datetime
-
 from PyQt5.QtWidgets import *
-
 from ui_form import Ui_Widget
-
 
 class Widget(QWidget):
     def __init__(self, parent=None):

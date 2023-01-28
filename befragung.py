@@ -3,8 +3,8 @@ import sys
 import psycopg2
 from datetime import datetime
 
-from PyQt5.QtWidgets import *  # QApplication, QWidget
-from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+
 from ui_form import Ui_Widget
 
 
@@ -25,15 +25,15 @@ class CheckBoxDict(dict):
     def check(self, position):
         if 0 <= position < len(self):
             self[position].setChecked(True)
-            [self[i].setChecked(False) for i, _ in enumerate(self) if i != position]
+            [self[c].setChecked(False) for c, _ in enumerate(self) if c != position]
 
     def bind(self, position):
         self[position].clicked.connect(lambda: self.check(position))
 
     def note(self):
-        for i in range(len(self)):
-            if self[i].isChecked():
-                return [1, 2, 3, 4, 5][i]
+        for c, _ in enumerate(self):
+            if self[c].isChecked():
+                return [1, 2, 3, 4, 5][c]
         return 9
 
 
@@ -94,7 +94,7 @@ class Database:
 
     def protocol(self, text: str):
         log = open(self.dbname + '.log', 'a')
-        log.write('-- ' + str(datetime.datetime.now()) + '\n')
+        log.write('-- ' + str(datetime.now()) + '\n')
         log.write(text + '\n')
         log.flush()
         log.close()
@@ -103,8 +103,6 @@ class Database:
 def clear():
     for it in widget.findChildren(QCheckBox):
         it.setChecked(False)
-    for it in widget.findChildren(QLineEdit):
-        it.setText('')
     widget.ui.lineEdit_jahr.setText('2022')
     widget.ui.lineEdit_monat.setText('')
     widget.ui.lineEdit_monat.setCursorPosition(0)
@@ -115,16 +113,17 @@ def save():
     jahr = widget.ui.lineEdit_jahr.text()
     monat = str(int(widget.ui.lineEdit_monat.text())
                 ) if widget.ui.lineEdit_monat.text() != '' else ''
-    if cbdict_geschlecht[1].isChecked():
+    if cbdict_geschlecht[0].isChecked():
         geschlecht = 'männlich'
-    elif cbdict_geschlecht[2].isChecked():
+    elif cbdict_geschlecht[1].isChecked():
         geschlecht = 'weiblich'
     else:
         geschlecht = 'keine Angaben'
-    lokal = ''
-    for i in range(len(cbdict_lokal)):
-        if cbdict_lokal[i].isChecked():
-            lokal = ['Knie', 'Hüfte', 'Schulter', 'keine Angaben'][i]
+    try:
+        lokal = [['Knie', 'Hüfte', 'Schulter', 'keine Angaben'][c] for c, _ in enumerate(cbdict_lokal) if
+                 cbdict_lokal[c].isChecked() == True][0]
+    except IndexError:
+        lokal = ''
     empfarzt = widget.ui.checkBox_empfarzt.isChecked()
     empfangeh = widget.ui.checkBox_empfangeh.isChecked()
     eigen = widget.ui.checkBox_eigen.isChecked()
@@ -135,14 +134,17 @@ def save():
     notephysio = cbdict_physio.note()
     notesozial = cbdict_sozial.note()
     notegesamt = cbdict_gesamt.note()
-    anspruch = ''
-    for i in range(len(cbdict_anspruch)):
-        if cbdict_anspruch[i].isChecked():
-            anspruch = ['ja', 'vielleicht', 'nein'][i]
-    empfehlen = ''
-    for i in range(len(cbdict_empfehl)):
-        if cbdict_empfehl[i].isChecked():
-            empfehlen = ['ja', 'vielleicht', 'nein'][i]
+    try:
+        anspruch = \
+            [['ja', 'vielleicht', 'nein'][c] for c, _ in enumerate(cbdict_anspruch) if cbdict_anspruch[c].isChecked()][
+                0]
+    except IndexError:
+        anspruch = ''
+    try:
+        empfehlen = \
+            [['ja', 'vielleicht', 'nein'][c] for c, _ in enumerate(cbdict_empfehl) if cbdict_empfehl[c].isChecked()][0]
+    except IndexError:
+        empfehlen = ''
     sql = "insert into befragung (jahr, monat, geschlecht, lokal, empfarzt, empfangeh, eigen, wohnort, andere, notearzt, notepflege, notephysio, notesozial, notegesamt, anspruch, empfehlen) values ("
     sql += "'" + jahr + "',"
     sql += "'" + monat + "',"

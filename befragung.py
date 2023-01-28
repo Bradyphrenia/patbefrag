@@ -168,7 +168,6 @@ def save():
     clear()
     start()
 
-
 def changeMonat():
     if widget.ui.lineEdit_monat.text() not in [str(x + 1) for x in range(12)]:
         widget.ui.lineEdit_monat.setText('')

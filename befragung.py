@@ -119,7 +119,7 @@ def save():
     elif cbdict_geschlecht[1].isChecked():
         geschlecht = 'weiblich'
     else:
-        geschlecht = 'keine Angaben'
+        geschlecht = ''
     try:
         lokal = [['Knie', 'Hüfte', 'Schulter', 'keine Angaben'][c] for c, _ in enumerate(cbdict_lokal) if
                  cbdict_lokal[c].isChecked() == True][0]

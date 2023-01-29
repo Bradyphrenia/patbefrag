@@ -29,7 +29,11 @@ class CheckBoxDict(dict):
 
     def bind(self, position):
         if 0 <= position < len(self):
-            self[position].clicked.connect(lambda: self.check(position))
+            return self[position].clicked.connect(lambda: self.check(position))
+
+    def bindall(self):
+        for c, _ in enumerate(self):
+            self.bind(c)
 
     def note(self):
         for c, _ in enumerate(self):
@@ -230,19 +234,15 @@ if __name__ == "__main__":
     cbdict_empfehl = CheckBoxDict({0: widget.ui.checkBox_weiterja,
                                    1: widget.ui.checkBox_weitervllt,
                                    2: widget.ui.checkBox_weiternein})
-    for i in range(2):
-        cbdict_geschlecht.bind(i)
-    for i in range(4):
-        cbdict_lokal.bind(i)
-    for i in range(5):
-        cbdict_arzt.bind(i)
-        cbdict_pflege.bind(i)
-        cbdict_physio.bind(i)
-        cbdict_sozial.bind(i)
-        cbdict_gesamt.bind(i)
-    for i in range(3):
-        cbdict_anspruch.bind(i)
-        cbdict_empfehl.bind(i)
+    cbdict_geschlecht.bindall()
+    cbdict_lokal.bindall()
+    cbdict_arzt.bindall()
+    cbdict_pflege.bindall()
+    cbdict_physio.bindall()
+    cbdict_sozial.bindall()
+    cbdict_gesamt.bindall()
+    cbdict_anspruch.bindall()
+    cbdict_empfehl.bindall()
     clear()
     widget.ui.pushButton_clear.clicked.connect(clear)
     widget.ui.pushButton_save.clicked.connect(save)

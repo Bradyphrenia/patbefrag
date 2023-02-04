@@ -1,4 +1,7 @@
 # Steffen Troeger 2023
+"""
+Programm zur Digitalisierung von Fragebögen
+"""
 import sys
 from PyQt5.QtWidgets import QApplication, QCheckBox
 from window import Widget
@@ -12,8 +15,8 @@ def clear():
     function to reset the window widgets
     :return: none
     """
-    for it in widget.findChildren(QCheckBox):
-        it.setChecked(False)
+    for item in widget.findChildren(QCheckBox):
+        item.setChecked(False)
     widget.ui.lineEdit_jahr.setText('2022')
     widget.ui.lineEdit_monat.setText('')
     widget.ui.lineEdit_monat.setCursorPosition(0)
@@ -60,14 +63,14 @@ def save():
     except IndexError:
         empfehlen = ''
     output = 'insert into befragung ('
-    for c, _ in enumerate(field_type):  # generating field string
-        out = field_type[c][1]
-        out = out + ',' if field_type[c][0] != 15 else out + ') values ('
+    for counter, _ in enumerate(field_type):  # generating field string
+        out = field_type[counter][1]
+        out = out + ',' if field_type[counter][0] != 15 else out + ') values ('
         output += out
-    for c, _ in enumerate(field_type):  # generating value string
-        out = str(eval(field_type[c][1]))
-        out = "'" + out + "'" if field_type[c][2] == 0 else out
-        out = out + ',' if field_type[c][0] != 15 else out + ')'
+    for counter, _ in enumerate(field_type):  # generating value string
+        out = str(eval(field_type[counter][1]))
+        out = "'" + out + "'" if field_type[counter][2] == 0 else out
+        out = out + ',' if field_type[counter][0] != 15 else out + ')'
         output += out
     patbef.open_db()
     patbef.execute(output)
@@ -100,23 +103,27 @@ def start():
 
 
 def init_datafielddict():
-    fs = [[0, 'jahr', 0],
-          [1, 'monat', 0],
-          [2, 'geschlecht', 0],
-          [3, 'lokal', 0],
-          [4, 'empfarzt', 1],
-          [5, 'empfangeh', 1],
-          [6, 'eigen', 1],
-          [7, 'wohnort', 1],
-          [8, 'andere', 1],
-          [9, 'notearzt', 1],
-          [10, 'notepflege', 1],
-          [11, 'notephysio', 1],
-          [12, 'notesozial', 1],
-          [13, 'notegesamt', 1],
-          [14, 'anspruch', 0],
-          [15, 'empfehlen', 0]]  # list of lists // position, field name, field type
-    for item in fs:
+    """
+    initialize a DataFieldDictionary
+    :return: none
+    """
+    field_list = [[0, 'jahr', 0],
+                  [1, 'monat', 0],
+                  [2, 'geschlecht', 0],
+                  [3, 'lokal', 0],
+                  [4, 'empfarzt', 1],
+                  [5, 'empfangeh', 1],
+                  [6, 'eigen', 1],
+                  [7, 'wohnort', 1],
+                  [8, 'andere', 1],
+                  [9, 'notearzt', 1],
+                  [10, 'notepflege', 1],
+                  [11, 'notephysio', 1],
+                  [12, 'notesozial', 1],
+                  [13, 'notegesamt', 1],
+                  [14, 'anspruch', 0],
+                  [15, 'empfehlen', 0]]  # list of lists // position, field name, field type
+    for item in field_list:
         field_type.append(item[0], item)
 
 

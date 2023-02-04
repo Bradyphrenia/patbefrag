@@ -1,3 +1,0 @@
-([('befragung',
-   '/Users/steffen/PycharmProjects/patbefrag/dist/befragung',
-   'EXECUTABLE')],)

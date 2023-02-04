@@ -172,7 +172,7 @@ def save():
     start()
 
 
-def changeMonat():
+def change_monat():
     if widget.ui.lineEdit_monat.text() not in [str(x + 1) for x in range(12)]:
         widget.ui.lineEdit_monat.setText('')
         widget.ui.lineEdit_monat.setCursorPosition(0)
@@ -244,7 +244,7 @@ if __name__ == "__main__":
     clear()
     widget.ui.pushButton_clear.clicked.connect(clear)
     widget.ui.pushButton_save.clicked.connect(save)
-    widget.ui.lineEdit_monat.textChanged.connect(changeMonat)
+    widget.ui.lineEdit_monat.textChanged.connect(change_monat)
     widget.ui.lineEdit_monat.setInputMask('99')
     if sys.platform == 'win32':  # Klinikrechner Windows
         patbef = Database('139.64.201.9', 'epz', 'postgres', 'SuperUser2012')

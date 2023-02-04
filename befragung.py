@@ -1,45 +1,9 @@
 # Steffen Troeger 2023
 import sys
-
-from PyQt5.QtWidgets import QApplication, QWidget, QCheckBox
-from ui_form import Ui_Widget
+from PyQt5.QtWidgets import QApplication, QCheckBox
+from window import Widget
 from database import Database
-
-class Widget(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.ui = Ui_Widget()
-        self.ui.setupUi(self)
-
-class CheckBoxDict(dict):
-    def __init__(self, dict_):
-        super().__init__(self)
-        self.update(dict_)
-
-    def append(self, position, ckb):
-        if position not in self.keys():
-            self[position] = ckb
-
-    def check(self, position):
-        if 0 <= position < len(self):
-            self[position].setChecked(True)
-            [self[c].setChecked(False) for c, _ in enumerate(self) if c != position]
-
-    def bind(self, position):
-        if 0 <= position < len(self):
-            return self[position].clicked.connect(lambda: self.check(position))
-
-    def bindall(self):
-        for c, _ in enumerate(self):
-            self.bind(c)
-
-    def note(self):
-        for c, _ in enumerate(self):
-            if self[c].isChecked():
-                return [1, 2, 3, 4, 5][c]
-        return 9
-
-
+from checkboxdict import CheckBoxDict
 
 
 def clear():

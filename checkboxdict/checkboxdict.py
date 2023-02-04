@@ -1,4 +1,8 @@
 class CheckBoxDict(dict):
+    """
+    von Dictionary abgeleitete Klasse zur Speicherung von CheckBoxen
+    """
+
     def __init__(self, dict_):
         super().__init__(self)
         self.update(dict_)

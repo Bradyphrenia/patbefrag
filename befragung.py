@@ -7,6 +7,10 @@ from checkboxdict import CheckBoxDict
 
 
 def clear():
+    """
+    function to reset the window widgets
+    :return: none
+    """
     for it in widget.findChildren(QCheckBox):
         it.setChecked(False)
     widget.ui.lineEdit_jahr.setText('2022')
@@ -15,7 +19,12 @@ def clear():
 
 
 def save():
-    # id, jahr, monat, geschlecht, lokal, empfarzt, empfangeh, eigen, wohnort, andere, notearzt, notepflege, notephysio, notesozial, notegesamt, anspruch, empfehlen
+    """
+    function to save the data  to the database
+    :return: none
+    """
+    # id, jahr, monat, geschlecht, lokal, empfarzt, empfangeh, eigen, wohnort, andere,
+    # notearzt, notepflege, notephysio, notesozial, notegesamt, anspruch, empfehlen
     jahr = widget.ui.lineEdit_jahr.text()
     monat = str(int(widget.ui.lineEdit_monat.text())
                 ) if widget.ui.lineEdit_monat.text() != '' else ''
@@ -27,7 +36,7 @@ def save():
         geschlecht = ''
     try:
         lokal = [['Knie', 'Hüfte', 'Schulter', 'keine Angaben'][c] for c, _ in enumerate(cbdict_lokal) if
-                 cbdict_lokal[c].isChecked() == True][0]
+                 cbdict_lokal[c].isChecked()][0]
     except IndexError:
         lokal = ''
     empfarzt = widget.ui.checkBox_empfarzt.isChecked()
@@ -51,7 +60,8 @@ def save():
             [['ja', 'vielleicht', 'nein'][c] for c, _ in enumerate(cbdict_empfehl) if cbdict_empfehl[c].isChecked()][0]
     except IndexError:
         empfehlen = ''
-    sql = "insert into befragung (jahr, monat, geschlecht, lokal, empfarzt, empfangeh, eigen, wohnort, andere, notearzt, notepflege, notephysio, notesozial, notegesamt, anspruch, empfehlen) values ("
+    sql = "insert into befragung (jahr, monat, geschlecht, lokal, empfarzt, empfangeh, eigen, wohnort, andere, " \
+          "notearzt, notepflege, notephysio, notesozial, notegesamt, anspruch, empfehlen) values ("
     sql += "'" + jahr + "',"
     sql += "'" + monat + "',"
     sql += "'" + geschlecht + "',"
@@ -76,12 +86,20 @@ def save():
 
 
 def change_monat():
+    """
+    function to check the input of the lineEdit for the month
+    :return: none
+    """
     if widget.ui.lineEdit_monat.text() not in [str(x + 1) for x in range(12)]:
         widget.ui.lineEdit_monat.setText('')
         widget.ui.lineEdit_monat.setCursorPosition(0)
 
 
 def start():
+    """
+    function to write the actual state of the database into the form
+    :return: none
+    """
     patbef.open_db()
     read = patbef.fetchone('select max(id) from befragung;')
     widget.ui.label_id.setText('ID: ' + str(read[0]))

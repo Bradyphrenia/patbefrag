@@ -8,6 +8,7 @@ from window import Widget
 from database import Database
 from checkboxdict import CheckBoxDict
 from datafielddict import DataFieldDict
+from datadict import DataDict
 
 
 def clear():
@@ -27,48 +28,48 @@ def save():
     function to save the data  to the database
     :return: none
     """
-    jahr = widget.ui.lineEdit_jahr.text()
-    monat = str(int(widget.ui.lineEdit_monat.text())
-                ) if widget.ui.lineEdit_monat.text() != '' else ''
+    field_data['jahr'] = widget.ui.lineEdit_jahr.text()
+    field_data['monat'] = str(int(widget.ui.lineEdit_monat.text())
+                              ) if widget.ui.lineEdit_monat.text() != '' else ''
     if cbdict_geschlecht[0].isChecked():
-        geschlecht = 'männlich'
+        field_data['geschlecht'] = 'männlich'
     elif cbdict_geschlecht[1].isChecked():
-        geschlecht = 'weiblich'
+        field_data['geschlecht'] = 'weiblich'
     else:
-        geschlecht = ''
+        field_data['geschlecht'] = ''
     try:
-        lokal = [['Knie', 'Hüfte', 'Schulter', 'keine Angaben'][c] for c, _ in enumerate(cbdict_lokal) if
-                 cbdict_lokal[c].isChecked()][0]
+        field_data['lokal'] = [['Knie', 'Hüfte', 'Schulter', 'keine Angaben'][c] for c, _ in enumerate(cbdict_lokal) if
+                               cbdict_lokal[c].isChecked()][0]
     except IndexError:
-        lokal = ''
-    empfarzt = widget.ui.checkBox_empfarzt.isChecked()
-    empfangeh = widget.ui.checkBox_empfangeh.isChecked()
-    eigen = widget.ui.checkBox_eigen.isChecked()
-    wohnort = widget.ui.checkBox_wohnort.isChecked()
-    andere = widget.ui.checkBox_andere.isChecked()
-    notearzt = cbdict_arzt.note()
-    notepflege = cbdict_pflege.note()
-    notephysio = cbdict_physio.note()
-    notesozial = cbdict_sozial.note()
-    notegesamt = cbdict_gesamt.note()
+        field_data['lokal'] = ''
+    field_data['empfarzt'] = str(widget.ui.checkBox_empfarzt.isChecked())
+    field_data['empfangeh'] = str(widget.ui.checkBox_empfangeh.isChecked())
+    field_data['eigen'] = str(widget.ui.checkBox_eigen.isChecked())
+    field_data['wohnort'] = str(widget.ui.checkBox_wohnort.isChecked())
+    field_data['andere'] = str(widget.ui.checkBox_andere.isChecked())
+    field_data['notearzt'] = cbdict_arzt.note()
+    field_data['notepflege'] = cbdict_pflege.note()
+    field_data['notephysio'] = cbdict_physio.note()
+    field_data['notesozial'] = cbdict_sozial.note()
+    field_data['notegesamt'] = cbdict_gesamt.note()
     try:
-        anspruch = \
+        field_data['anspruch'] = \
             [['ja', 'vielleicht', 'nein'][c] for c, _ in enumerate(cbdict_anspruch) if cbdict_anspruch[c].isChecked()][
                 0]
     except IndexError:
-        anspruch = ''
+        field_data['anspruch'] = ''
     try:
-        empfehlen = \
+        field_data['empfehlen'] = \
             [['ja', 'vielleicht', 'nein'][c] for c, _ in enumerate(cbdict_empfehl) if cbdict_empfehl[c].isChecked()][0]
     except IndexError:
-        empfehlen = ''
+        field_data['empfehlen'] = ''
     output = 'insert into befragung ('
     for counter, _ in enumerate(field_type):  # generating field string
         out = field_type[counter][1]
         out = out + ',' if field_type[counter][0] != 15 else out + ') values ('
         output += out
     for counter, _ in enumerate(field_type):  # generating value string
-        out = str(eval(field_type[counter][1]))
+        out = field_data[field_type[counter][1]]
         out = "'" + out + "'" if field_type[counter][2] == 0 else out
         out = out + ',' if field_type[counter][0] != 15 else out + ')'
         output += out
@@ -104,7 +105,7 @@ def start():
 
 def init_datafielddict():
     """
-    initialize a DataFieldDictionary
+    initialize a DataFieldDictionary and a DataDictionary
     :return: none
     """
     field_list = [[0, 'jahr', 0],
@@ -125,6 +126,7 @@ def init_datafielddict():
                   [15, 'empfehlen', 0]]  # list of lists // position, field name, field type
     for item in field_list:
         field_type.append(item[0], item)
+        field_data.append(item[1], '')
 
 
 if __name__ == "__main__":
@@ -182,6 +184,7 @@ if __name__ == "__main__":
     cbdict_anspruch.bindall()
     cbdict_empfehl.bindall()
     field_type = DataFieldDict()
+    field_data = DataDict()
     init_datafielddict()
     clear()
     widget.ui.pushButton_clear.clicked.connect(clear)

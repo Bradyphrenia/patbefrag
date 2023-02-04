@@ -27,5 +27,5 @@ class CheckBoxDict(dict):
     def note(self):
         for c, _ in enumerate(self):
             if self[c].isChecked():
-                return [1, 2, 3, 4, 5][c]
-        return 9
+                return ['1', '2', '3', '4', '5'][c]
+        return '9'

@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QApplication, QCheckBox
 from window import Widget
 from database import Database
 from checkboxdict import CheckBoxDict
+from datafielddict import DataFieldDict
 
 
 def clear():
@@ -23,8 +24,6 @@ def save():
     function to save the data  to the database
     :return: none
     """
-    # id, jahr, monat, geschlecht, lokal, empfarzt, empfangeh, eigen, wohnort, andere,
-    # notearzt, notepflege, notephysio, notesozial, notegesamt, anspruch, empfehlen
     jahr = widget.ui.lineEdit_jahr.text()
     monat = str(int(widget.ui.lineEdit_monat.text())
                 ) if widget.ui.lineEdit_monat.text() != '' else ''
@@ -60,26 +59,18 @@ def save():
             [['ja', 'vielleicht', 'nein'][c] for c, _ in enumerate(cbdict_empfehl) if cbdict_empfehl[c].isChecked()][0]
     except IndexError:
         empfehlen = ''
-    sql = "insert into befragung (jahr, monat, geschlecht, lokal, empfarzt, empfangeh, eigen, wohnort, andere, " \
-          "notearzt, notepflege, notephysio, notesozial, notegesamt, anspruch, empfehlen) values ("
-    sql += "'" + jahr + "',"
-    sql += "'" + monat + "',"
-    sql += "'" + geschlecht + "',"
-    sql += "'" + lokal + "',"
-    sql += str(empfarzt) + ","
-    sql += str(empfangeh) + ","
-    sql += str(eigen) + ","
-    sql += str(wohnort) + ","
-    sql += str(andere) + ","
-    sql += str(notearzt) + ","
-    sql += str(notepflege) + ","
-    sql += str(notephysio) + ","
-    sql += str(notesozial) + ","
-    sql += str(notegesamt) + ","
-    sql += "'" + anspruch + "',"
-    sql += "'" + empfehlen + "');"
+    output = 'insert into befragung ('
+    for c, _ in enumerate(field_type):  # generating field list
+        out = field_type[c][1]
+        out = out + ',' if field_type[c][0] != 15 else out + ') values ('
+        output += out
+    for c, _ in enumerate(field_type):  # generating value list
+        out = str(eval(field_type[c][1]))
+        out = "'" + out + "'" if field_type[c][2] == 0 else out
+        out = out + ',' if field_type[c][0] != 15 else out + ')'
+        output += out
     patbef.open_db()
-    patbef.execute(sql)
+    patbef.execute(output)
     patbef.close_db()
     clear()
     start()
@@ -106,6 +97,27 @@ def start():
     read = patbef.fetchall('select id from befragung;')
     widget.ui.label_anzahl.setText('Anzahl: ' + str(len(read)))
     patbef.close_db()
+
+
+def init_datafielddict():
+    fs = [[0, 'jahr', 0],
+          [1, 'monat', 0],
+          [2, 'geschlecht', 0],
+          [3, 'lokal', 0],
+          [4, 'empfarzt', 1],
+          [5, 'empfangeh', 1],
+          [6, 'eigen', 1],
+          [7, 'wohnort', 1],
+          [8, 'andere', 1],
+          [9, 'notearzt', 1],
+          [10, 'notepflege', 1],
+          [11, 'notephysio', 1],
+          [12, 'notesozial', 1],
+          [13, 'notegesamt', 1],
+          [14, 'anspruch', 0],
+          [15, 'empfehlen', 0]]  # list of lists // position, field name, field type
+    for item in fs:
+        field_type.append(item[0], item)
 
 
 if __name__ == "__main__":
@@ -162,6 +174,8 @@ if __name__ == "__main__":
     cbdict_gesamt.bindall()
     cbdict_anspruch.bindall()
     cbdict_empfehl.bindall()
+    field_type = DataFieldDict()
+    init_datafielddict()
     clear()
     widget.ui.pushButton_clear.clicked.connect(clear)
     widget.ui.pushButton_save.clicked.connect(save)

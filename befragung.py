@@ -60,11 +60,11 @@ def save():
     except IndexError:
         empfehlen = ''
     output = 'insert into befragung ('
-    for c, _ in enumerate(field_type):  # generating field list
+    for c, _ in enumerate(field_type):  # generating field string
         out = field_type[c][1]
         out = out + ',' if field_type[c][0] != 15 else out + ') values ('
         output += out
-    for c, _ in enumerate(field_type):  # generating value list
+    for c, _ in enumerate(field_type):  # generating value string
         out = str(eval(field_type[c][1]))
         out = "'" + out + "'" if field_type[c][2] == 0 else out
         out = out + ',' if field_type[c][0] != 15 else out + ')'

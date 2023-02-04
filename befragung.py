@@ -103,7 +103,7 @@ def start():
     patbef.close_db()
 
 
-def init_datafielddict():
+def init_dicts():
     """
     initialize a DataFieldDictionary and a DataDictionary
     :return: none
@@ -185,7 +185,7 @@ if __name__ == "__main__":
     cbdict_empfehl.bindall()
     field_type = DataFieldDict()
     field_data = DataDict()
-    init_datafielddict()
+    init_dicts()
     clear()
     widget.ui.pushButton_clear.clicked.connect(clear)
     widget.ui.pushButton_save.clicked.connect(save)

@@ -1,3 +1,7 @@
+"""
+window class
+"""
+
 from PyQt5.QtWidgets import QWidget
 from ui_form import Ui_Widget
 

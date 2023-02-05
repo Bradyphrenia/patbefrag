@@ -66,12 +66,12 @@ def save():
     output = 'insert into befragung ('
     for counter, _ in enumerate(field_type):  # generating field string
         out = field_type[counter][1]
-        out = out + ',' if field_type[counter][0] != 15 else out + ') values ('
+        out = out + ',' if field_type[counter][0] != 15 else out + ') values ('  # letztes Feld
         output += out
     for counter, _ in enumerate(field_type):  # generating value string
         out = field_data[field_type[counter][1]]
         out = "'" + out + "'" if field_type[counter][2] == 0 else out
-        out = out + ',' if field_type[counter][0] != 15 else out + ')'
+        out = out + ',' if field_type[counter][0] != 15 else out + ')'  # letztes Feld
         output += out
     patbef.open_db()
     patbef.execute(output)
@@ -82,7 +82,7 @@ def save():
 
 def change_monat():
     """
-    function to check the input of the lineEdit for the month
+    function to check the input of the lineEdit text for the month
     :return: none
     """
     if widget.ui.lineEdit_monat.text() not in [str(x + 1) for x in range(12)]:
@@ -96,10 +96,10 @@ def start():
     :return: none
     """
     patbef.open_db()
-    read = patbef.fetchone('select max(id) from befragung;')
+    read = patbef.fetchone('select max(id) from befragung;')  # ID zur Datenbankpflege
     widget.ui.label_id.setText('ID: ' + str(read[0]))
     read = patbef.fetchall('select id from befragung;')
-    widget.ui.label_anzahl.setText('Anzahl: ' + str(len(read)))
+    widget.ui.label_anzahl.setText('Anzahl: ' + str(len(read)))  # Anzahl der aktuellen Datensätze
     patbef.close_db()
 
 

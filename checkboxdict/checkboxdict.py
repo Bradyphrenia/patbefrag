@@ -7,14 +7,12 @@ class CheckBoxDict(dict):
         super().__init__(self)
         self.update(dict_)
 
-    def append(self, position, ckb):
-        if position not in self.keys():
-            self[position] = ckb
+    def append(self, key, value):
+        self.setdefault(key, value)
 
-    def check(self, position):
-        if 0 <= position < len(self):
-            self[position].setChecked(True)
-            [self[c].setChecked(False) for c, _ in enumerate(self) if c != position]
+    def check(self, key):
+        for entry in self.keys():
+            entry.setChecked(False) if key == entry else entry.setChecked(True) 
 
     def bind(self, position):
         if 0 <= position < len(self):

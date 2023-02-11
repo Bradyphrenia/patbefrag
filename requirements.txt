@@ -1,2 +1,5 @@
-PyQt5==5.15.8
+# PyQt5 needs some installation instructions (at least on Apple M1 MacOs 13.1).
+# If Problems occure, try to debug with `pip install PyQt5 --verbose`
+PyQt5 == 5.15.8 --install-option="--config-settings" \
+                --install-option="--confirm-license="
 psycopg2~=2.9.5

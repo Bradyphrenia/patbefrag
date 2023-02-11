@@ -1,6 +1,6 @@
 import psycopg2
 from datetime import datetime
-
+import sys
 
 class Database:
     """

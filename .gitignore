@@ -2,4 +2,11 @@
 /.idea/
 /build/
 /dist/
-/.gitignore
+
+__pycache__/
+
+# python environment
+.venv/
+
+# log files
+epz.log

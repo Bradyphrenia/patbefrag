@@ -192,7 +192,7 @@ if __name__ == "__main__":
     widget.ui.lineEdit_monat.textChanged.connect(change_monat)
     widget.ui.lineEdit_monat.setInputMask('99')
     if sys.platform == 'win32':  # Klinikrechner Windows
-        config_read = open('config.txt', 'r')  #  config.txt
+        config_read = open('config.txt', 'r')  # config.txt
         ip_address = config_read.readline().strip()
         password = config_read.readline().strip()
         config_read.close()

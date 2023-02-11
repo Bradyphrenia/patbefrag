@@ -195,6 +195,7 @@ if __name__ == "__main__":
         config_read = open('config.txt', 'r')
         ip_address = config_read.readline().strip()
         password = config_read.readline().strip()
+        config_read.close()
         patbef = Database("'" + ip_address + "'", 'epz', 'postgres', "'" + password + "'")
     else:  # eigener Rechner MacOSX
         patbef = Database('localhost', 'epz', 'postgres', 'postgres')

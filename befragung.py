@@ -192,7 +192,10 @@ if __name__ == "__main__":
     widget.ui.lineEdit_monat.textChanged.connect(change_monat)
     widget.ui.lineEdit_monat.setInputMask('99')
     if sys.platform == 'win32':  # Klinikrechner Windows
-        patbef = Database('localhost', 'epz', 'postgres', 'postgres')
+        config_read = open('config.txt', 'r')
+        ip_address = config_read.readline().strip()
+        password = config_read.readline().strip()
+        patbef = Database("'" + ip_address + "'", 'epz', 'postgres', "'" + password + "'")
     else:  # eigener Rechner MacOSX
         patbef = Database('localhost', 'epz', 'postgres', 'postgres')
     start()

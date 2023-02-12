@@ -11,9 +11,12 @@ class CheckBoxDict(dict):
         if position not in self.keys():
             self[position] = ckb
 
-    def check(self, key):
-        for entry in self.keys():
-            entry.setChecked(False) if key == entry else entry.setChecked(True)
+    def check(self, position):
+        if 0 <= position < len(self):
+            self[position].setChecked(True)
+            for c in self:
+                if c != position:
+                    self[c].setChecked(False)
 
     def bind(self, position):
         if 0 <= position < len(self):
@@ -25,7 +28,7 @@ class CheckBoxDict(dict):
 
     def note(self):
         for entry in self.keys():
-            if entry.isChecked():
+            if self[entry].isChecked():
                 # nothing will be returned if !entry.isChecked()
                 return ['1', '2', '3', '4', '5'][entry]
         return '9'

@@ -124,9 +124,6 @@ def init_dicts():
                   [13, 'notegesamt', 1],
                   [14, 'anspruch', 0],
                   [15, 'empfehlen', 0]]  # list of lists // position, field name, field type
-    # for item in field_list:
-    #     field_type.append(item[0], item)
-    #     field_data.append(item[1], '')
     field_type.update({item[0]: item for item in field_list})  # dictionary comprehension
     field_data.update({item[1]: '' for item in field_list})
 

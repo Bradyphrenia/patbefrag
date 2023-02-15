@@ -9,3 +9,4 @@ class DataDict(dict):
     def append(self, name, data):
         if name not in self.keys():
             self[name] = data
+

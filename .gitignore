@@ -4,3 +4,9 @@
 /dist/
 /.gitignore
 /config.txt
+/checkboxdict.cpython-311-darwin.so
+/database.cpython-311-darwin.so
+/datadict.cpython-311-darwin.so
+/datafielddict.cpython-311-darwin.so
+/ui_form.cpython-311-darwin.so
+/window.cpython-311-darwin.so

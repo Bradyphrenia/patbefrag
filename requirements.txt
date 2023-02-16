@@ -1,2 +1,4 @@
 PyQt5==5.15.8
 psycopg2~=2.9.5
+setuptools~=65.5.1
+Cython~=0.29.33

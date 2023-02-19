@@ -2,6 +2,7 @@ import psycopg2
 from datetime import datetime
 import sys
 
+
 class Database:
     """
     Datenbank-Klasse
@@ -63,3 +64,14 @@ class Database:
         log.write(text + '\n')
         log.flush()
         log.close()
+
+    def __str__(self):
+        return f'{self.__class__.__name__}(\'{self.dbname}\')'
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}(\'{self.host}\', \'{self.dbname}\', \'{self.username}\', \'######\')'
+
+
+if __name__ == '__main__':
+    patbef = Database('localhost', 'epz', 'postgres', 'postgres')
+    patbef.

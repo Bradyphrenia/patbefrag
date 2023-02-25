@@ -1,12 +1,15 @@
-/befragung.spec
-/.idea/
-/build/
-/dist/
-
-__pycache__/
-
-# python environment
-.venv/
-
 # log files
 epz.log
+
+befragung.spec
+
+# editor configurations
+.idea/
+
+# virtual environments
+.venv/
+
+# build folders
+build/
+dist/
+__pycache__/

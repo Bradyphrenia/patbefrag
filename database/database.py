@@ -12,6 +12,7 @@ class Database:
     def __init__(
         self,
         host = 'localhost',
+        port = '5432',
         dbname = 'epz',
         username = 'postgres',
         password = 'postgres'
@@ -22,6 +23,7 @@ class Database:
         self.pg_connection_dict = {
             'dbname': dbname,
             'host': host,
+            'port': port,
             'user': username,
             'password': password
         }

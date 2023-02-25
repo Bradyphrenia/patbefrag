@@ -1,5 +1,11 @@
-/befragung.spec
-/.idea/
-/build/
-/dist/
-/.gitignore
+befragung.spec
+
+# editor configurations
+.idea/
+
+# virtual environments
+.venv/
+
+# build folders
+build/
+dist/

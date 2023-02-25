@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - ./table.sql:/docker-entrypoint-initdb.d/table.sql
+      - ./sequence.sql:/docker-entrypoint-initdb.d/sequence.sql
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=epz
+    ports:
+      - '5433:5432'
+
+volumes:
+  postgres_data:

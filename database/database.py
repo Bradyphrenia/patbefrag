@@ -8,20 +8,29 @@ class Database:
     Datenbank-Klasse
     """
 
-    def __init__(self, host, dbname, username, password):
-        self.host = host
-        self.dbname = dbname
-        self.username = username
-        self.password = password
-        self.conn, self.cur = None, None
+    def __init__(
+        self,
+        host = 'localhost',
+        dbname = 'epz',
+        username = 'postgres',
+        password = 'postgres'
+    ):
+        self.conn = None
+        self.cur = None
+
+        self.pg_connection_dict = {
+            'dbname': dbname,
+            'host': host,
+            'user': username,
+            'password': password
+        }
 
     def name(self):
-        return self.dbname
+        return self.pg_connection_dict[dbname]
 
     def open_db(self):
         try:  # Datenbankfehler abfangen...
-            self.conn = psycopg2.connect(
-                "host=" + self.host + " dbname=" + self.dbname + " user=" + self.username + " password=" + self.password)
+            self.conn = psycopg2.connect(**self.pg_connection_dict)
             self.cur = self.conn.cursor()
         except psycopg2.OperationalError as e:
             self.protocol('-- ' + str(e))
@@ -59,7 +68,7 @@ class Database:
         return None
 
     def protocol(self, text: str):
-        log = open(self.dbname + '.log', 'a')
+        log = open(f'{self.pg_connection_dict[dbname]}.log', 'a')
         log.write('-- ' + str(datetime.now()) + '\n')
         log.write(text + '\n')
         log.flush()

@@ -36,7 +36,7 @@ class Database:
             self.conn = psycopg2.connect(**self.pg_connection_dict)
             self.cur = self.conn.cursor()
         except psycopg2.OperationalError as e:
-            self.protocol('-- ' + str(e))
+            self.protocol(f'-- {e}')
             sys.exit(1)
 
     def close_db(self):
@@ -44,7 +44,7 @@ class Database:
             self.cur.close()
             self.conn.close()
         except psycopg2.OperationalError as e:
-            self.protocol('-- ' + str(e))
+            self.protocol(f'-- {e}')
             sys.exit(1)
 
     def fetchall(self, sql):
@@ -72,7 +72,7 @@ class Database:
 
     def protocol(self, text: str):
         log = open(f'{self.pg_connection_dict[dbname]}.log', 'a')
-        log.write('-- ' + str(datetime.now()) + '\n')
-        log.write(text + '\n')
+        log.write(f'-- {datetime.now()}\n')
+        log.write(f'{text}\n')
         log.flush()
         log.close()

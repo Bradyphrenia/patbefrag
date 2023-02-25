@@ -9,3 +9,4 @@ befragung.spec
 # build folders
 build/
 dist/
+__pycache__/

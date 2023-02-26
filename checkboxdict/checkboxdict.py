@@ -29,6 +29,11 @@ class CheckBoxDict(dict):
     def note(self):
         for entry in self.keys():
             if self[entry].isChecked():
-                # nothing will be returned if !entry.isChecked()
                 return ['1', '2', '3', '4', '5'][entry]
-        return '9'
+        return '9'  # no checkbox is checked
+
+    def position(self):
+        for entry in self.keys():
+            if self[entry].isChecked():
+                return [0, 1, 2][entry]
+        return 3  # no checkbox is checked

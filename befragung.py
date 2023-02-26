@@ -39,12 +39,7 @@ def save():
         field_data['geschlecht'] = 'weiblich'
     else:
         field_data['geschlecht'] = ''
-    try:
-        field_data['lokal'] = [['Knie', 'Hüfte', 'Schulter', 'keine Angaben'][c] for c, _ in enumerate(cbdict_lokal) if
-                               cbdict_lokal[c].isChecked()][0]
-    except IndexError:
-        field_data['lokal'] = ''
-    field_data['empfarzt'] = str(widget.ui.checkBox_empfarzt.isChecked())
+    field_data['lokal'] = ['Knie', 'Hüfte', 'Schulter', 'keine Angaben', ''][cbdict_lokal.position()]
     field_data['empfangeh'] = str(widget.ui.checkBox_empfangeh.isChecked())
     field_data['eigen'] = str(widget.ui.checkBox_eigen.isChecked())
     field_data['wohnort'] = str(widget.ui.checkBox_wohnort.isChecked())
@@ -54,17 +49,8 @@ def save():
     field_data['notephysio'] = cbdict_physio.note()
     field_data['notesozial'] = cbdict_sozial.note()
     field_data['notegesamt'] = cbdict_gesamt.note()
-    try:
-        field_data['anspruch'] = \
-            [['ja', 'vielleicht', 'nein'][c] for c, _ in enumerate(cbdict_anspruch) if cbdict_anspruch[c].isChecked()][
-                0]
-    except IndexError:
-        field_data['anspruch'] = ''
-    try:
-        field_data['empfehlen'] = \
-            [['ja', 'vielleicht', 'nein'][c] for c, _ in enumerate(cbdict_empfehl) if cbdict_empfehl[c].isChecked()][0]
-    except IndexError:
-        field_data['empfehlen'] = ''
+    field_data['anspruch'] = ['ja', 'vielleicht', 'nein', ''][cbdict_anspruch.position()]
+    field_data['empfehlen'] = ['ja', 'vielleicht', 'nein', ''][cbdict_empfehl.position()]
     output = 'insert into befragung ('
     out_1, out_2 = '', ''
     for counter, _ in enumerate(field_type):

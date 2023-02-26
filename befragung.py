@@ -40,6 +40,7 @@ def save():
     else:
         field_data['geschlecht'] = ''
     field_data['lokal'] = ['Knie', 'Hüfte', 'Schulter', 'keine Angaben', ''][cbdict_lokal.position()]
+    field_data['empfarzt'] = str(widget.ui.checkBox_empfarzt.isChecked())
     field_data['empfangeh'] = str(widget.ui.checkBox_empfangeh.isChecked())
     field_data['eigen'] = str(widget.ui.checkBox_eigen.isChecked())
     field_data['wohnort'] = str(widget.ui.checkBox_wohnort.isChecked())

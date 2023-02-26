@@ -1,6 +1,7 @@
-import psycopg2
-from datetime import datetime
 import sys
+from datetime import datetime
+
+import psycopg2
 
 
 class Database:
@@ -74,4 +75,3 @@ class Database:
 
 if __name__ == '__main__':
     patbef = Database('localhost', 'epz', 'postgres', 'postgres')
-    patbef.

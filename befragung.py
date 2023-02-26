@@ -3,12 +3,14 @@
 Programm zur Digitalisierung von Fragebögen
 """
 import sys
+
 from PyQt5.QtWidgets import QApplication, QCheckBox
-from window import Widget
-from database import Database
+
 from checkboxdict import CheckBoxDict
-from datafielddict import DataFieldDict
+from database import Database
 from datadict import DataDict
+from datafielddict import DataFieldDict
+from window import Widget
 
 
 def clear():
@@ -64,15 +66,18 @@ def save():
     except IndexError:
         field_data['empfehlen'] = ''
     output = 'insert into befragung ('
-    for counter, _ in enumerate(field_type):  # generating field string
-        out = field_type[counter][1]
-        out = out + ',' if field_type[counter][0] != 15 else out + ') values ('  # letztes Feld
-        output += out
-    for counter, _ in enumerate(field_type):  # generating value string
+    out_1, out_2 = '', ''
+    for counter, _ in enumerate(field_type):
+        out_1 += field_type[counter][1]
         out = field_data[field_type[counter][1]]
-        out = "'" + out + "'" if field_type[counter][2] == 0 else out
-        out = out + ',' if field_type[counter][0] != 15 else out + ')'  # letztes Feld
-        output += out
+        out_2 += "'" + out + "'" if field_type[counter][2] == 0 else out
+        if counter != 15:  # jeweils letztes Feld?
+            out_1 += ','
+            out_2 += ','
+        else:
+            out_1 += ') values ('
+            out_2 += ')'
+    output += (out_1 + out_2)
     patbef.open_db()
     patbef.execute(output)
     patbef.close_db()

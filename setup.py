@@ -6,7 +6,7 @@ from Cython.Distutils import build_ext
 
 setup(
     name='patbefrag',
-    version='0.100',
+    version='0.12',
     packages=['window', 'ui_form', 'database', 'checkboxdict'],
     ext_modules=cythonize(
         [
@@ -34,7 +34,7 @@ setup(
     ),
     url='',
     license='',
-    author='steffen',
-    author_email='',
+    author='Steffen Troeger',
+    author_email='bradyphrenia@icloud.com',
     description=''
 )

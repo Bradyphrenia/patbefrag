@@ -10,3 +10,4 @@
 /datafielddict.cpython-311-darwin.so
 /ui_form.cpython-311-darwin.so
 /window.cpython-311-darwin.so
+*.so

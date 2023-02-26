@@ -76,7 +76,7 @@ def save():
             out_2 += ','
         else:
             out_1 += ') values ('
-            out_2 += ')'
+            out_2 += ');'
     output += (out_1 + out_2)
     patbef.open_db()
     patbef.execute(output)

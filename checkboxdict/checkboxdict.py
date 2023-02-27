@@ -26,12 +26,14 @@ class CheckBoxDict(dict):
         for c, _ in enumerate(self):
             self.bind(c)
 
+    @property
     def note(self):
         for entry in self.keys():
             if self[entry].isChecked():
                 return ['1', '2', '3', '4', '5'][entry]
         return '9'  # no checkbox is checked
 
+    @property
     def position(self):
         for entry in self.keys():
             if self[entry].isChecked():

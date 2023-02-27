@@ -39,19 +39,19 @@ def save():
         field_data['geschlecht'] = 'weiblich'
     else:
         field_data['geschlecht'] = ''
-    field_data['lokal'] = ['Knie', 'Hüfte', 'Schulter', 'keine Angaben', ''][cbdict_lokal.position()]
+    field_data['lokal'] = ['Knie', 'Hüfte', 'Schulter', 'keine Angaben', ''][cbdict_lokal.position]
     field_data['empfarzt'] = str(widget.ui.checkBox_empfarzt.isChecked())
     field_data['empfangeh'] = str(widget.ui.checkBox_empfangeh.isChecked())
     field_data['eigen'] = str(widget.ui.checkBox_eigen.isChecked())
     field_data['wohnort'] = str(widget.ui.checkBox_wohnort.isChecked())
     field_data['andere'] = str(widget.ui.checkBox_andere.isChecked())
-    field_data['notearzt'] = cbdict_arzt.note()
-    field_data['notepflege'] = cbdict_pflege.note()
-    field_data['notephysio'] = cbdict_physio.note()
-    field_data['notesozial'] = cbdict_sozial.note()
-    field_data['notegesamt'] = cbdict_gesamt.note()
-    field_data['anspruch'] = ['ja', 'vielleicht', 'nein', ''][cbdict_anspruch.position()]
-    field_data['empfehlen'] = ['ja', 'vielleicht', 'nein', ''][cbdict_empfehl.position()]
+    field_data['notearzt'] = cbdict_arzt.note
+    field_data['notepflege'] = cbdict_pflege.note
+    field_data['notephysio'] = cbdict_physio.note
+    field_data['notesozial'] = cbdict_sozial.note
+    field_data['notegesamt'] = cbdict_gesamt.note
+    field_data['anspruch'] = ['ja', 'vielleicht', 'nein', ''][cbdict_anspruch.position]
+    field_data['empfehlen'] = ['ja', 'vielleicht', 'nein', ''][cbdict_empfehl.position]
     output = 'insert into befragung ('
     out_1, out_2 = '', ''
     for counter, _ in enumerate(field_type):

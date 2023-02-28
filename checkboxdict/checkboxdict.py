@@ -10,21 +10,21 @@ class CheckBoxDict(dict):
     def append(self, key, value):
         self.setdefault(key, value)
 
-    def check(self, key):
-        for entry in self.keys():
-            entry.setChecked(False) if key == entry else entry.setChecked(True) 
+    def check(self, value):
+        for val in self.values():
+            val.setChecked(True) if val == value else val.setChecked(False)
 
-    def bind(self, position):
-        if 0 <= position < len(self):
-            return self[position].clicked.connect(lambda: self.check(position))
+    def bind(self, value):
+        if value in self.values():
+            return value.clicked.connect(lambda: self.check(value))
 
     def bindall(self):
-        for c, _ in enumerate(self):
-            self.bind(c)
+        for val in self.values():
+            self.bind(val)
 
     def note(self):
         for entry in self.keys():
-            if entry.isChecked():
-            # nothing will be returned if !entry.isChecked()
-                return ['1', '2', '3', '4', '5'][entry] 
+            if self[entry].isChecked():
+                # nothing will be returned if !entry.isChecked()
+                return ['1', '2', '3', '4', '5'][entry]
         return '9'

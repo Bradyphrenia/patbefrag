@@ -1,8 +1,7 @@
-from setuptools import find_packages, setup
-from setuptools.extension import Extension
-
 from Cython.Build import cythonize
 from Cython.Distutils import build_ext
+from setuptools import setup
+from setuptools.extension import Extension
 
 setup(
     name='patbefrag',
@@ -27,6 +26,9 @@ setup(
         compiler_directives={
             'language_level': "3",
             'always_allow_keywords': True,
+            'boundscheck': True,  # compiler directive
+            'wraparound': True
+
         }
     ),
     cmdclass=dict(

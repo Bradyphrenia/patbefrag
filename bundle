@@ -1,0 +1,10 @@
+#!/usr/bin/bash
+
+pyinstaller -F -w \
+  --add-binary "checkboxdict.cpython-311-darwin.so:checkboxdict" \
+  --add-binary "database.cpython-311-darwin.so:database" \
+  --add-binary "datadict.cpython-311-darwin.so:datadict" \
+  --add-binary "datafielddict.cpython-311-darwin.so:datdatafielddict" \
+  --add-binary "ui_form.cpython-311-darwin.so:ui_form" \
+  --add-binary "window.cpython-311-darwin.so:window" \
+  befragung.py

@@ -82,7 +82,7 @@ def change_monat():
     function to check the input of the lineEdit text for the month
     :return: none
     """
-    if widget.ui.lineEdit_monat.text() not in [str(x + 1) for x in range(12)]:
+    if widget.ui.lineEdit_monat.text() not in [str(x) for x in range(1, 13)]:
         widget.ui.lineEdit_monat.setText('')
         widget.ui.lineEdit_monat.setCursorPosition(0)
 

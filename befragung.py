@@ -38,8 +38,7 @@ def save():
     else:
         field_data['geschlecht'] = ''
     try:
-        field_data['lokal'] = [['Knie', 'Hüfte', 'Schulter', 'keine Angaben'][c] for c, _ in enumerate(cbdict_lokal) if
-                               cbdict_lokal[c].isChecked()][0]
+        field_data['lokal'] = [['Knie', 'Hüfte', 'Schulter', 'keine Angaben'][key] for key, value in cbdict_lokal.items() if value.isChecked()][0]
     except IndexError:
         field_data['lokal'] = ''
     field_data['empfarzt'] = str(widget.ui.checkBox_empfarzt.isChecked())
@@ -54,24 +53,22 @@ def save():
     field_data['notegesamt'] = cbdict_gesamt.note()
     try:
         field_data['anspruch'] = \
-            [['ja', 'vielleicht', 'nein'][c] for c, _ in enumerate(cbdict_anspruch) if cbdict_anspruch[c].isChecked()][
-                0]
+            [['ja', 'vielleicht', 'nein'][key] for key, value in cbdict_anspruch.items() if value.isChecked()][0]
     except IndexError:
         field_data['anspruch'] = ''
     try:
         field_data['empfehlen'] = \
-            [['ja', 'vielleicht', 'nein'][c] for c, _ in enumerate(cbdict_empfehl) if cbdict_empfehl[c].isChecked()][0]
+            [['ja', 'vielleicht', 'nein'][key] for key, value in cbdict_empfehl.items() if value.isChecked()][0]
     except IndexError:
         field_data['empfehlen'] = ''
     output = 'insert into befragung ('
-    for counter, _ in enumerate(field_type):  # generating field string
-        out = field_type[counter][1]
-        out = out + ',' if field_type[counter][0] != 15 else out + ') values ('  # letztes Feld
+    for _, value in field_type.items():  # generating field string
+        out = value[1] + ',' if value[0] != 15 else value[1] + ') values ('  # letztes Feld
         output += out
-    for counter, _ in enumerate(field_type):  # generating value string
-        out = field_data[field_type[counter][1]]
-        out = "'" + out + "'" if field_type[counter][2] == 0 else out
-        out = out + ',' if field_type[counter][0] != 15 else out + ')'  # letztes Feld
+    for _, value in field_type.items():  # generating value string
+        out = field_data[value[1]]
+        out = "'" + out + "'" if value[2] == 0 else out
+        out = out + ',' if value[0] != 15 else out + ')'  # letztes Feld
         output += out
     patbef.open_db()
     patbef.execute(output)

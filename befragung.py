@@ -97,9 +97,9 @@ def start():
     """
     patbef.open_db()
     read = patbef.fetchone('select max(id) from befragung;')  # ID zur Datenbankpflege
-    widget.ui.label_id.setText('ID: ' + str(read[0]))
+    widget.ui.label_id.setText(f'ID: {read[0]}')
     read = patbef.fetchall('select id from befragung;')
-    widget.ui.label_anzahl.setText('Anzahl: ' + str(len(read)))  # Anzahl der aktuellen Datensätze
+    widget.ui.label_anzahl.setText(f'Anzahl: {len(read)}')  # Anzahl der aktuellen Datensätze
     patbef.close_db()
 
 

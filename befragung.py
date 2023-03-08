@@ -77,7 +77,7 @@ def change_monat():
     function to check the input of the lineEdit text for the month
     :return: none
     """
-    if widget.ui.lineEdit_monat.text() not in [str(x + 1) for x in range(12)]:
+    if widget.ui.lineEdit_monat.text() not in [str(x) for x in range(1, 13)]:
         widget.ui.lineEdit_monat.setText('')
         widget.ui.lineEdit_monat.setCursorPosition(0)
 
@@ -89,9 +89,9 @@ def start():
     """
     patbef.open_db()
     read = patbef.fetchone('select max(id) from befragung;')  # ID zur Datenbankpflege
-    widget.ui.label_id.setText('ID: ' + str(read[0]))
+    widget.ui.label_id.setText(f'ID: {read[0]}')
     read = patbef.fetchall('select id from befragung;')
-    widget.ui.label_anzahl.setText('Anzahl: ' + str(len(read)))  # Anzahl der aktuellen Datensätze
+    widget.ui.label_anzahl.setText(f'Anzahl: {len(read)}')  # Anzahl der aktuellen Datensätze
     patbef.close_db()
 
 

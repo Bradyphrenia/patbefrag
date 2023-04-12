@@ -33,6 +33,7 @@ class CheckBoxDict(dict):
     @property
     def position(self):
         for entry in self.keys():
+            print(entry)
             if self[entry].isChecked():
-                return [0, 1, 2][entry]
+                return [0, 1, 2, 3][entry]
         return 3  # no checkbox is checked

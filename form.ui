@@ -848,6 +848,19 @@
      <string>nicht weiterempfehlen</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButtonMemo">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>50</y>
+      <width>91</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Bemerkungen</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QPushButton" name="pushButton_save">
    <property name="geometry">

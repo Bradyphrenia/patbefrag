@@ -11,6 +11,7 @@ from database import Database
 from datadict import DataDict
 from datafielddict import DataFieldDict
 from window import Widget
+from memo_window import Memo
 
 
 def clear():
@@ -20,9 +21,10 @@ def clear():
     """
     for item in widget.findChildren(QCheckBox):
         item.setChecked(False)
-    widget.ui.lineEdit_jahr.setText('2022')
+    widget.ui.lineEdit_jahr.setText('2023')
     widget.ui.lineEdit_monat.setText('')
     widget.ui.lineEdit_monat.setCursorPosition(0)
+    memo_window.textEditMemo.setPlainText('')
 
 
 def save():
@@ -39,7 +41,8 @@ def save():
         field_data['geschlecht'] = 'weiblich'
     else:
         field_data['geschlecht'] = ''
-    field_data['lokal'] = ['Knie', 'Hüfte', 'Schulter', 'keine Angaben', ''][cbdict_lokal.position]
+    field_data['lokal'] = ['Knie', 'Hüfte', 'Schulter',
+                           'keine Angaben', ''][cbdict_lokal.position]
     field_data['empfarzt'] = str(widget.ui.checkBox_empfarzt.isChecked())
     field_data['empfangeh'] = str(widget.ui.checkBox_empfangeh.isChecked())
     field_data['eigen'] = str(widget.ui.checkBox_eigen.isChecked())
@@ -50,8 +53,10 @@ def save():
     field_data['notephysio'] = cbdict_physio.note
     field_data['notesozial'] = cbdict_sozial.note
     field_data['notegesamt'] = cbdict_gesamt.note
-    field_data['anspruch'] = ['ja', 'vielleicht', 'nein', ''][cbdict_anspruch.position]
-    field_data['empfehlen'] = ['ja', 'vielleicht', 'nein', ''][cbdict_empfehl.position]
+    field_data['anspruch'] = ['ja', 'vielleicht',
+                              'nein', ''][cbdict_anspruch.position]
+    field_data['empfehlen'] = ['ja', 'vielleicht',
+                               'nein', ''][cbdict_empfehl.position]
     output = 'insert into befragung ('
     out_1, out_2 = '', ''
     for counter, _ in enumerate(field_type):
@@ -59,11 +64,11 @@ def save():
         out = field_data[field_type[counter][1]]
         out_2 += "'" + out + "'" if field_type[counter][2] == 0 else out
         if counter != 15:  # jeweils letztes Feld?
-            out_1 += ','
-            out_2 += ','
+            out_1 += ', '
+            out_2 += ', '
         else:
-            out_1 += ') values ('
-            out_2 += ');'
+            out_1 += ', memo) values ('
+            out_2 += ", '" + memo_window.textEditMemo.toPlainText() + "');"
     output += (out_1 + out_2)
     patbef.open_db()
     patbef.execute(output)
@@ -82,16 +87,22 @@ def change_monat():
         widget.ui.lineEdit_monat.setCursorPosition(0)
 
 
+def memo_start():
+    memo_window.show()
+
+
 def start():
     """
     function to write the actual state of the database into the form
     :return: none
     """
     patbef.open_db()
-    read = patbef.fetchone('select max(id) from befragung;')  # ID zur Datenbankpflege
+    # ID zur Datenbankpflege
+    read = patbef.fetchone('select max(id) from befragung;')
     widget.ui.label_id.setText(f'ID: {read[0]}')
     read = patbef.fetchall('select id from befragung;')
-    widget.ui.label_anzahl.setText(f'Anzahl: {len(read)}')  # Anzahl der aktuellen Datensätze
+    # Anzahl der aktuellen Datensätze
+    widget.ui.label_anzahl.setText(f'Anzahl: {len(read)}')
     patbef.close_db()
 
 
@@ -116,7 +127,8 @@ def init_dicts():
                   [13, 'notegesamt', 1],
                   [14, 'anspruch', 0],
                   [15, 'empfehlen', 0]]  # list of lists // position, field name, field type
-    field_type.update({item[0]: item for item in field_list})  # dictionary comprehension
+    # dictionary comprehension
+    field_type.update({item[0]: item for item in field_list})
     field_data.update({item[1]: '' for item in field_list})
 
 
@@ -124,7 +136,9 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyle("fusion")
     widget = Widget()
-    cbdict_geschlecht = CheckBoxDict({0: widget.ui.checkBox_m, 1: widget.ui.checkBox_w})
+    memo_window = Memo()
+    cbdict_geschlecht = CheckBoxDict(
+        {0: widget.ui.checkBox_m, 1: widget.ui.checkBox_w})
     cbdict_lokal = CheckBoxDict({0: widget.ui.checkBox_knie,
                                  1: widget.ui.checkBox_huefte,
                                  2: widget.ui.checkBox_schulter,
@@ -180,13 +194,15 @@ if __name__ == "__main__":
     clear()
     widget.ui.pushButton_clear.clicked.connect(clear)
     widget.ui.pushButton_save.clicked.connect(save)
+    widget.ui.pushButtonMemo.clicked.connect(memo_start)
     widget.ui.lineEdit_monat.textChanged.connect(change_monat)
     widget.ui.lineEdit_monat.setInputMask('99')
     if sys.platform == 'win32':  # Klinikrechner Windows
         with open('config.txt', 'r', encoding='utf8') as config_read:  # ip & pwd << config.txt
             ip_address = config_read.readline().strip()
             password = config_read.readline().strip()
-        patbef = Database("'" + ip_address + "'", 'epz', 'postgres', "'" + password + "'")
+        patbef = Database("'" + ip_address + "'", 'epz',
+                          'postgres', "'" + password + "'")
     else:  # eigener Rechner MacOSX
         patbef = Database('localhost', 'epz', 'postgres', 'postgres')
     start()

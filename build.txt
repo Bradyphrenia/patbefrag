@@ -1,0 +1,6 @@
+pyinstaller -F -w --add-binary='checkboxdict.cpython-311-darwin.so;dist' --add-binary='datafielddict.cpython-311-darwin.so;dist'    --add-binary='database.cpython-311-darwin.so;dist' --add-binary='datadict.cpython-311-darwin.so;dist' --add-binary='ui_form.cpython-311-darwin.so;dist'  --add-binary='window.cpython-311-darwin.so;dist' befragung.py
+
+pyinstaller -F -w --add-binary=checkboxdict.cp311-win32.pyd;dist --add-binary=datafielddict.cp311-win32.pyd;dist    --add-binary=database.cp311-win32.pyd;dist --add-binary=datadict.cp311-win32.pyd;dist --add-binary=ui_form.cp311-win32.pyd;dist  --add-binary=window.cp311-win32.pyd;dist befragung.py
+
+
+python setup.py build_ext --inplace

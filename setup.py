@@ -6,7 +6,8 @@ from setuptools.extension import Extension
 setup(
     name='patbefrag',
     version='0.12',
-    packages=['window', 'ui_form', 'database', 'checkboxdict'],
+    packages=['window', 'ui_form', 'database',
+              'checkboxdict'],
     ext_modules=cythonize(
         [
             Extension("checkboxdict",
@@ -21,6 +22,7 @@ setup(
                       ["ui_form/ui_form.py"]),
             Extension("window",
                       ["window/window.py"]),
+
         ],
         build_dir="build_cythonize",
         compiler_directives={
